@@ -21,6 +21,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final String mobile = phoneNumber.startsWith('91') ? phoneNumber : '91$phoneNumber';
 
       final uri = Uri.parse('$_baseUrl/otp?template_id=$_templateId&mobile=$mobile');
+      print('--- DEBUG: MSG91 Request ---');
+      print('URL: $uri');
       
       final response = await http.get(
         uri,
@@ -30,15 +32,22 @@ class AuthRepositoryImpl implements AuthRepository {
         },
       );
 
+      print('--- DEBUG: MSG91 Response ---');
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       final Map<String, dynamic> responseData = json.decode(response.body);
 
       // MSG91 success response usually has type: 'success'
       if (response.statusCode == 200 && responseData['type'] == 'success') {
+        print('OTP Successfully Dispatched via MSG91!');
         return const Right(null);
       } else {
+        print('MSG91 Error: ${responseData['message']}');
         return Left(AuthFailure(responseData['message'] ?? "Failed to send OTP"));
       }
     } catch (e) {
+      print('Exception in sendOtp: $e');
       return const Left(ServerFailure("Cannot connect to server. Check your internet connection."));
     }
   }

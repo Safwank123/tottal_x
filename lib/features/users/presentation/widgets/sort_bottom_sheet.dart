@@ -71,7 +71,7 @@ class _SortBottomSheetState extends State<SortBottomSheet> {
                 }
               },
             ),
-            Text(value, style: const TextStyle(fontSize: 16)),
+            Text(value, style: const TextStyle(fontSize: 16   ,color: Colors.black, )),
           ],
         ),
       ),

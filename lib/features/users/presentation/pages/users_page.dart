@@ -89,6 +89,7 @@ class _UsersPageState extends State<UsersPage> {
           children: [
             // Header
             Container(
+              height: 70,
               color: Colors.black,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(

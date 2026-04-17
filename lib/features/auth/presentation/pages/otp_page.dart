@@ -87,14 +87,12 @@ class _OtpPageState extends State<OtpPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Placeholder for illustration
-                      Center(
-                        child: Container(
-                          height: 150,
-                          width: 150,
-                          color: Colors.blue.withOpacity(0.1),
-                          child: const Icon(Icons.shopping_cart, size: 80, color: Colors.blue),
-                        ),
-                      ),
+                     Center(
+  child: Image.asset(
+    "assets/otp.png", // use proper illustration
+    height: 140,
+  ),
+),
                       const SizedBox(height: 30),
                       const Text(
                         "OTP Verification",
