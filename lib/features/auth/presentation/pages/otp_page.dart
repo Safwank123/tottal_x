@@ -5,6 +5,7 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/custom_numpad.dart';
+import '../../../users/presentation/pages/users_page.dart';
 
 class OtpPage extends StatefulWidget {
   final String phoneNumber;
@@ -71,8 +72,7 @@ class _OtpPageState extends State<OtpPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
-            // Navigator to Home Dashboard (to be implemented)
-            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeDashboard()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const UsersPage()));
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }

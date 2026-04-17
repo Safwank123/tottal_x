@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/users/presentation/bloc/users_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
+import 'features/users/presentation/pages/users_page.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -19,6 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => di.sl<AuthBloc>()),
+        BlocProvider(create: (_) => di.sl<UsersBloc>()),
       ],
       child: MaterialApp(
         title: 'Tottal X',
