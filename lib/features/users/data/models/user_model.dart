@@ -1,4 +1,4 @@
-import '../entities/user_entity.dart';
+import '../../domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({
@@ -28,4 +28,4 @@ class UserModel extends UserEntity {
       'imageUrl': imageUrl,
     };
   }
-}
+} 
