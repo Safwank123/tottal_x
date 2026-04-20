@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:io';
 import '../bloc/users_bloc.dart';
 import '../bloc/users_event.dart';
 import '../bloc/users_state.dart';
@@ -72,8 +73,9 @@ class _UsersPageState extends State<UsersPage> {
       builder: (_) {
         return AddUserBottomSheet(
           onAddUser: (user) {
+            // Just dispatch the event - don't pop here!
+            // The bottom sheet handles its own closing
             context.read<UsersBloc>().add(AddNewUserEvent(user));
-            Navigator.pop(context);
           },
         );
       },
@@ -189,20 +191,56 @@ class _UsersPageState extends State<UsersPage> {
                         ),
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(user.imageUrl), // In real app, check if valid URL
-                              onBackgroundImageError: (_, __) {},
-                              child: user.imageUrl.isEmpty ? const Icon(Icons.person) : null,
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey.shade300,
+                              ),
+                              child: user.imageUrl.isEmpty
+                                  ? const Icon(Icons.person, size: 30)
+                                  : ClipOval(
+                                      child: user.imageUrl.startsWith('http')
+                                          ? Image.network(
+                                              user.imageUrl,
+                                              fit: BoxFit.cover,
+                                              cacheWidth: 120,
+                                              cacheHeight: 120,
+                                              errorBuilder: (context, error, stackTrace) =>
+                                                  const Icon(Icons.person, size: 30),
+                                            )
+                                          : FutureBuilder<File>(
+                                              future: Future.delayed(
+                                                Duration.zero,
+                                                () => File(user.imageUrl),
+                                              ),
+                                              builder: (context, snapshot) {
+                                                if (!snapshot.hasData) {
+                                                  return const Icon(Icons.person, size: 30);
+                                                }
+                                                return Image.file(
+                                                  snapshot.data!,
+                                                  fit: BoxFit.cover,
+                                                  cacheWidth: 120,
+                                                  cacheHeight: 120,
+                                                  errorBuilder: (context, error, stackTrace) =>
+                                                      const Icon(Icons.person, size: 30),
+                                                );
+                                              },
+                                            ),
+                                    ),
                             ),
                             const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(user.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                const SizedBox(height: 4),
-                                Text("Age: ${user.age}", style: const TextStyle(color: Colors.black54)),
-                              ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(user.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                  const SizedBox(height: 4),
+                                  Text("Age: ${user.age}", style: const TextStyle(color: Colors.black54)),
+                                ],
+                              ),
                             ),
                           ],
                         ),

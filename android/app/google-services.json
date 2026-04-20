@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "129569496712",
+    "project_id": "tottal-x",
+    "storage_bucket": "tottal-x.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129569496712:android:bc73110069e8464be9c93d",
+        "android_client_info": {
+          "package_name": "com.example.tottal_x"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129569496712-akkugtirm0pmind9dumlgc2j1nccg7s1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tottal_x",
+            "certificate_hash": "07e20e0ee4a386ed7ca5a6f5746f67b169f0e9ec"
+          }
+        },
+        {
+          "client_id": "129569496712-l18gt8395lcolhno5rgsu36v19pl3h7m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMQIQ5CZ7IHLoZz40rn1VtCPmghoZ7T14"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "129569496712-l18gt8395lcolhno5rgsu36v19pl3h7m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "129569496712-beubtbo6tu6itc6ec6ujdnaiqu5s8ar8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tottalx"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

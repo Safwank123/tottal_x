@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toastification/toastification.dart';
+import '../../data/services/auth_service.dart';
+import '../../../users/presentation/pages/users_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -16,7 +18,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final AuthService _authService = AuthService();
   String _phone = "";
+  bool _isGoogleLoading = false;
 
   void _onNumber(String num) {
     if (_phone.length < 10) {
@@ -31,6 +35,55 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _phone = _phone.substring(0, _phone.length - 1);
       });
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    print('🎯 [LoginPage] Google Sign-In button clicked');
+    
+    setState(() {
+      _isGoogleLoading = true;
+    });
+
+    try {
+      print('⏳ [LoginPage] Calling AuthService.signInWithGoogle()...');
+      final userCredential = await _authService.signInWithGoogle();
+      
+      print('✅ [LoginPage] signInWithGoogle() returned successfully');
+      print('👤 [LoginPage] User credential received: ${userCredential.user?.uid}');
+      print('📊 [LoginPage] mounted: $mounted | user != null: ${userCredential.user != null}');
+      
+      if (userCredential.user != null && mounted) {
+        print('🚀 [LoginPage] Navigating to UsersPage...');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const UsersPage()),
+        );
+        print('✅ [LoginPage] Navigation to UsersPage completed');
+      } else {
+        print('❌ [LoginPage] Validation failed: user=${userCredential.user} mounted=$mounted');
+        throw Exception('Google sign-in failed. Please try again.');
+      }
+    } catch (error, stackTrace) {
+      print('❌ [LoginPage] Exception caught: $error');
+      print('📋 [LoginPage] Stack Trace: $stackTrace');
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sign-in Error: ${error.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    } finally {
+      print('🔄 [LoginPage] Finally block: Setting _isGoogleLoading to false');
+      if (mounted) {
+        setState(() {
+          _isGoogleLoading = false;
+        });
+      }
     }
   }
 
@@ -170,6 +223,39 @@ class _LoginPageState extends State<LoginPage> {
                                   : const Text("Get OTP", style: TextStyle(fontSize: 16, color: Colors.white)),
                             ),
                           ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 55,
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: Colors.grey.shade300),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                backgroundColor: Colors.white,
+                              ),
+                              onPressed: state is AuthLoading || _isGoogleLoading
+                                  ? null
+                                  : _signInWithGoogle,
+                              child: _isGoogleLoading
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
+                                    )
+                                  : Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(Icons.login, color: Colors.black),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "Continue with Google",
+                                          style: TextStyle(fontSize: 16, color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                            ),
+                          ),
                           const SizedBox(height: 20),
                         ],
                       ),
@@ -189,3 +275,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
