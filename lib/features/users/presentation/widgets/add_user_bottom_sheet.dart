@@ -197,7 +197,7 @@ Widget build(BuildContext context) {
                       width: 90,
                       height: 28,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.4),
+                        color: Colors.black.withValues(alpha: 0.1),
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(45),
                           bottomRight: Radius.circular(45),

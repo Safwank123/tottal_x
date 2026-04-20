@@ -33,8 +33,10 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   void _onScroll() {
+    final bloc = context.read<UsersBloc>();
+    if (bloc.state.status == UsersStatus.loading || bloc.state.hasReachedMax) return;
     if (_isBottom) {
-      context.read<UsersBloc>().add(FetchUsersEvent());
+      bloc.add(FetchUsersEvent());
     }
   }
 
@@ -157,7 +159,7 @@ class _UsersPageState extends State<UsersPage> {
             Expanded(
               child: BlocBuilder<UsersBloc, UsersState>(
                 builder: (context, state) {
-                  if (state.status == UsersStatus.initial && state.users.isEmpty) {
+                  if ((state.status == UsersStatus.initial || state.status == UsersStatus.loading) && state.users.isEmpty) {
                     return const Center(child: CircularProgressIndicator(color: Colors.black));
                   }
                   if (state.status == UsersStatus.failure) {
@@ -186,7 +188,7 @@ class _UsersPageState extends State<UsersPage> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2))
+                            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2))
                           ],
                         ),
                         child: Row(

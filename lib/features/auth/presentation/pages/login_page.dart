@@ -39,35 +39,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _signInWithGoogle() async {
-    print('🎯 [LoginPage] Google Sign-In button clicked');
-    
     setState(() {
       _isGoogleLoading = true;
     });
 
     try {
-      print('⏳ [LoginPage] Calling AuthService.signInWithGoogle()...');
       final userCredential = await _authService.signInWithGoogle();
       
-      print('✅ [LoginPage] signInWithGoogle() returned successfully');
-      print('👤 [LoginPage] User credential received: ${userCredential.user?.uid}');
-      print('📊 [LoginPage] mounted: $mounted | user != null: ${userCredential.user != null}');
-      
       if (userCredential.user != null && mounted) {
-        print('🚀 [LoginPage] Navigating to UsersPage...');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const UsersPage()),
         );
-        print('✅ [LoginPage] Navigation to UsersPage completed');
       } else {
-        print('❌ [LoginPage] Validation failed: user=${userCredential.user} mounted=$mounted');
         throw Exception('Google sign-in failed. Please try again.');
       }
-    } catch (error, stackTrace) {
-      print('❌ [LoginPage] Exception caught: $error');
-      print('📋 [LoginPage] Stack Trace: $stackTrace');
-      
+    } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -78,7 +65,6 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     } finally {
-      print('🔄 [LoginPage] Finally block: Setting _isGoogleLoading to false');
       if (mounted) {
         setState(() {
           _isGoogleLoading = false;
@@ -135,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                                 return Container(
                                   height: 150,
                                   width: 150,
-                                  color: Colors.blue.withOpacity(0.1),
+                                  color: Colors.blue.withValues(alpha: 0.1),
                                   child: const Icon(Icons.image, size: 80, color: Colors.blue),
                                 );
                               },
